@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saladdin | Developer & Gamer</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root {
             --bg-color: #050505;
@@ -14,201 +12,90 @@
             --accent-glow: #00a2ff;
             --text-color: #ffffff;
             --card-bg: rgba(15, 15, 15, 0.92);
+            --heart-color: #ff3366;
         }
-
         * { box-sizing: border-box; }
-
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: radial-gradient(circle at center, #001a33 0%, #050505 100%);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            color: var(--text-color); min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
-
-        .code-layer {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
+        .code-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
         .code-symbol {
-            position: absolute;
-            font-size: 18px;
-            font-weight: bold;
-            color: rgba(0, 123, 255, 0.15);
-            user-select: none;
-            transition: transform 0.3s ease-out, opacity 0.3s ease;
-            white-space: nowrap;
+            position: absolute; font-size: 16px; font-weight: bold;
+            color: rgba(0, 123, 255, 0.15); user-select: none;
+            transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.4s ease, color 0.4s ease;
+            white-space: nowrap; will-change: transform, opacity;
         }
-
+        .special-trigger {
+            position: fixed !important; top: 45px; left: 45px;
+            pointer-events: auto !important; z-index: 100;
+            font-size: 28px; cursor: pointer; opacity: 0.15;
+            transition: opacity 0.4s ease, color 0.4s ease, text-shadow 0.4s ease;
+        }
         .container {
-            position: relative;
-            z-index: 2;
-            width: 380px;
-            background: var(--card-bg);
-            border-radius: 26px;
-            padding: 35px 25px;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 123, 255, 0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative; z-index: 2; width: 380px;
+            background: var(--card-bg); border-radius: 26px; padding: 35px 25px;
+            text-align: center; backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 123, 255, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
-
-        .profile-wrapper {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px;
-        }
-
+        .profile-wrapper { width: 120px; height: 120px; margin: 0 auto 15px; }
         .profile-pic {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid var(--accent-color);
-            object-fit: cover;
-            box-shadow: 0 0 25px var(--accent-glow);
-            background: #111;
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 3px solid var(--accent-color); object-fit: cover;
+            box-shadow: 0 0 25px var(--accent-glow); background: #111;
         }
-
-        /* توهج الاسم H1 */
-        h1 { 
-            margin: 10px 0 5px; 
-            font-size: 30px; 
-            letter-spacing: 2px;
-            color: #fff;
-            text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-glow);
-            animation: glowText 3s infinite alternate;
-        }
-
-        @keyframes glowText {
-            from { text-shadow: 0 0 8px var(--accent-color), 0 0 15px var(--accent-glow); }
-            to { text-shadow: 0 0 15px var(--accent-color), 0 0 30px var(--accent-glow), 0 0 40px var(--accent-glow); }
-        }
-
-        .role { color: var(--accent-color); font-size: 13px; margin-bottom: 20px; font-weight: 500; }
-
-        /* تعديل التبويبات لتكون متحركة وموهجة */
+        h1 { margin: 10px 0 5px; font-size: 30px; letter-spacing: 2px; text-shadow: 0 0 10px var(--accent-color); }
+        .role { color: var(--accent-color); font-size: 13px; margin-bottom: 20px; }
         .tabs { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; }
-        
         .tab {
-            padding: 8px 10px;
-            font-size: 11px;
-            border-radius: 10px;
-            cursor: pointer;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,123,255,0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            flex: 1;
-            color: #ccc;
-            position: relative;
-            overflow: hidden;
+            padding: 8px 10px; font-size: 11px; border-radius: 10px; cursor: pointer;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(0,123,255,0.2);
+            transition: 0.3s; flex: 1; color: #ccc;
         }
-
-        .tab.active {
-            background: var(--accent-color);
-            color: #000;
-            font-weight: bold;
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: scale(1.05);
-        }
-
-        .tab:hover:not(.active) {
-            background: rgba(0, 123, 255, 0.2);
-            border-color: var(--accent-color);
-            color: #fff;
-        }
-
+        .tab.active { background: var(--accent-color); color: #000; font-weight: bold; box-shadow: 0 0 15px var(--accent-glow); }
         .page { display: none; font-size: 14px; line-height: 1.7; color: #ccc; min-height: 90px; }
         .page.active { display: block; animation: slideUp 0.4s ease forwards; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .social { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 15px; 
-            margin-top: 25px;
-            justify-items: center;
-        }
-        
+        .social { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; justify-items: center; }
         .social a {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0, 123, 255, 0.3);
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 20px;
-            transition: 0.3s;
+            width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0, 123, 255, 0.3); color: var(--text-color);
+            display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.3s;
         }
-
-        .social a:hover {
-            background: var(--accent-color);
-            color: #000;
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: scale(1.1) translateY(-3px);
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="code-layer" id="codeLayer"></div>
+<div class="special-trigger" id="stTrigger">ST</div>
 
 <div class="container">
     <div class="profile-wrapper">
         <img src="Salah.jpg" alt="Salah" class="profile-pic">
     </div>
-
     <h1>Saladdin</h1>
     <div class="role">🎮 Developer • 😎 Programmer • Gamer 💻</div>
-
     <div class="tabs">
         <div class="tab active" onclick="showPage(0)">عني</div>
         <div class="tab" onclick="showPage(1)">مهارات</div>
         <div class="tab" onclick="showPage(2)">ألعاب</div>
         <div class="tab" onclick="showPage(3)">تواصل</div>
     </div>
-
     <div id="content">
-        <div class="page active">
-            صلاح الدين أبوصالحية من نابلس، فلسطين.<br>
-            مطور مهتم بالأنظمة، البرمجة، وكل ما هو جديد في عالم التقنية.
-        </div>
-        <div class="page">
-            💻 <b>اللغات:</b> HTML, CSS, JavaScript<br>
-            ⚙️ <b>الأنظمة:</b> Automation & Systems<br>
-            🛠️ <b>القوة:</b> حل المشكلات وتطوير الأدوات
-        </div>
-        <div class="page">
-            🕹️ <b>المنصات:</b> PC & Console Gamer<br>
-            🎮 <b>الأسلوب:</b> WASD Enthusiast<br>
-            🔥 <b>الشغف:</b> دمج المعرفة مع عالم الألعاب
-        </div>
-        <div class="page">
-            سعيد بتواصلك معي عبر حساباتي الرسمية أدناه.
-        </div>
+        <div class="page active">صلاح الدين أبوصالحية من نابلس، فلسطين. مطور مهتم بالأنظمة والبرمجة.</div>
+        <div class="page">💻 HTML, CSS, JS | ⚙️ Automation | 🛠️ Problem Solving</div>
+        <div class="page">🕹️ PC & Console | 🎮 WASD | 🔥 Knowledge + Gaming</div>
+        <div class="page">سعيد بتواصلك معي عبر حساباتي الرسمية أدناه.</div>
     </div>
-
     <div class="social">
-        <a href="https://steamcommunity.com/profiles/76561198432299924/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a>
-        <a href="https://discordapp.com/users/salahaldeenabusalhia2564" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
-        <a href="https://www.twitch.tv/xxsaladdinxx" target="_blank" title="Twitch"><i class="fab fa-twitch"></i></a>
-        <a href="https://www.instagram.com/abu.amjad__salah?igsh=MXdiNjlucDlrbnFvdg==" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="https://wa.me/972599751751" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-        <a href="mailto:Sabusalhia3@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+        <a href="https://steamcommunity.com/profiles/76561198432299924/" target="_blank"><i class="fab fa-steam"></i></a>
+        <a href="https://discordapp.com/users/salahaldeenabusalhia2564" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="https://www.twitch.tv/xxsaladdinxx" target="_blank"><i class="fab fa-twitch"></i></a>
+        <a href="https://www.instagram.com/abu.amjad__salah" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/972599751751" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:Sabusalhia3@gmail.com"><i class="fas fa-envelope"></i></a>
     </div>
 </div>
 
@@ -223,43 +110,106 @@
     }
 
     const layer = document.getElementById("codeLayer");
-    const symbols = ["< />", "{ }", "[ ]", "()", "===", "!==", "++", "--", "0101", "&&", "||", ";", "@@", "##", "⚡", "🎮", "HTML", "JS", "PY"];
-    const rows = 8; const cols = 10;
+    const pool = ["< />", "{ }", "[ ]", "()", "===", "++", "01", "&&", "||", "JS", "PY", "⚡", "🔥", "💻", "🎮"];
+    const totalSymbols = 120; // تقليل العدد لتحسين الأداء
+    const allSymbols = [];
 
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const el = document.createElement("div");
-            el.className = "code-symbol";
-            el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            const left = (c * (100 / cols)) + (Math.random() * 6);
-            const top = (r * (100 / rows)) + (Math.random() * 6);
-            el.style.left = `${left}%`;
-            el.style.top = `${top}%`;
-            el.dataset.speed = Math.random() * 20 + 10;
-            layer.appendChild(el);
-        }
+    for (let i = 0; i < totalSymbols; i++) {
+        const el = document.createElement("div");
+        el.className = "code-symbol";
+        el.textContent = pool[Math.floor(Math.random() * pool.length)];
+        const left = Math.random() * 95;
+        const top = Math.random() * 95;
+        el.style.left = `${left}%`;
+        el.style.top = `${top}%`;
+        el.dataset.speed = Math.random() * 25 + 15;
+        layer.appendChild(el);
+        allSymbols.push(el);
     }
 
-    document.addEventListener("mousemove", e => {
+    const st = document.getElementById("stTrigger");
+    let isHeart = false;
+
+    st.addEventListener("mouseenter", () => {
+        isHeart = true;
+        const cx = window.innerWidth * 0.78; 
+        const cy = window.innerHeight * 0.5;
+        const scale = 17;
+
+        allSymbols.forEach((sym, i) => {
+            const t = (i / allSymbols.length) * 2 * Math.PI;
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+            
+            const targetX = cx + x * scale;
+            const targetY = cy + y * scale;
+            const currentX = (parseFloat(sym.style.left) / 100) * window.innerWidth;
+            const currentY = (parseFloat(sym.style.top) / 100) * window.innerHeight;
+
+            sym.style.transform = `translate(${targetX - currentX}px, ${targetY - currentY}px) scale(1.1)`;
+            sym.style.color = "var(--heart-color)";
+            sym.style.opacity = "1";
+            sym.style.textShadow = "0 0 12px var(--heart-color)";
+        });
+    });
+
+    st.addEventListener("mouseleave", () => {
+        isHeart = false;
+        allSymbols.forEach(sym => {
+            sym.style.transform = `translate(0,0) scale(1)`;
+            sym.style.color = "rgba(0, 123, 255, 0.15)";
+            sym.style.opacity = "0.15";
+            sym.style.textShadow = "none";
+        });
+    });
+
+    let ticking = false;
+    document.addEventListener("mousemove", (e) => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                handleMove(e);
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    function handleMove(e) {
         const { clientX: x, clientY: y } = e;
-        document.querySelectorAll(".code-symbol").forEach(sym => {
+
+        // وهج ST
+        const stRect = st.getBoundingClientRect();
+        const distToSt = Math.hypot(x - (stRect.left + 15), y - (stRect.top + 15));
+        if (distToSt < 250) {
+            const p = 1 - (distToSt / 250);
+            st.style.opacity = Math.max(0.15, p);
+            st.style.color = p > 0.5 ? "#ffcc00" : "rgba(0, 123, 255, 0.15)";
+            st.style.textShadow = p > 0.5 ? `0 0 ${15 * p}px #ffcc00` : "none";
+        } else {
+            st.style.opacity = "0.15";
+            st.style.textShadow = "none";
+        }
+
+        if (isHeart) return;
+
+        allSymbols.forEach(sym => {
             const rect = sym.getBoundingClientRect();
-            const dx = x - (rect.left + rect.width / 2);
-            const dy = y - (rect.top + rect.height / 2);
-            const dist = Math.sqrt(dx * dx + dy * dy);
+            const dx = x - (rect.left + 10);
+            const dy = y - (rect.top + 10);
+            const dist = Math.hypot(dx, dy);
+
             if (dist < 180) {
-                const force = (180 - dist) / sym.dataset.speed;
-                sym.style.transform = `translate(${dx * force * 0.3}px, ${dy * force * 0.3}px)`;
+                const f = (180 - dist) / sym.dataset.speed;
+                sym.style.transform = `translate(${dx * f}px, ${dy * f}px)`;
                 sym.style.opacity = "0.7";
                 sym.style.color = "var(--accent-glow)";
             } else {
-                sym.style.transform = `translate(0, 0)`;
+                sym.style.transform = `translate(0,0)`;
                 sym.style.opacity = "0.15";
                 sym.style.color = "rgba(0, 123, 255, 0.15)";
             }
         });
-    });
+    }
 </script>
-
 </body>
 </html>

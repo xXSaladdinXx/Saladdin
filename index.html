@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Saladdin | Developer & Gamer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,12 +14,13 @@
             --card-bg: rgba(15, 15, 15, 0.92);
             --heart-color: #ff3366;
         }
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: radial-gradient(circle at center, #001a33 0%, #050505 100%);
             color: var(--text-color); min-height: 100vh;
             display: flex; justify-content: center; align-items: center; overflow: hidden;
+            touch-action: none; /* يمنع سحب الصفحة أثناء التفاعل مع الرموز */
         }
         .code-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
         .code-symbol {
@@ -29,24 +30,24 @@
             white-space: nowrap; will-change: transform, opacity;
         }
         .special-trigger {
-            position: fixed !important; top: 45px; left: 45px;
+            position: fixed !important; top: 30px; left: 30px;
             pointer-events: auto !important; z-index: 100;
             font-size: 28px; cursor: pointer; opacity: 0.15;
             transition: opacity 0.4s ease, color 0.4s ease, text-shadow 0.4s ease;
         }
         .container {
-            position: relative; z-index: 2; width: 380px;
+            position: relative; z-index: 2; width: 90%; max-width: 380px;
             background: var(--card-bg); border-radius: 26px; padding: 35px 25px;
             text-align: center; backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 123, 255, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
-        .profile-wrapper { width: 120px; height: 120px; margin: 0 auto 15px; }
+        .profile-wrapper { width: 110px; height: 110px; margin: 0 auto 15px; }
         .profile-pic {
             width: 100%; height: 100%; border-radius: 50%;
             border: 3px solid var(--accent-color); object-fit: cover;
             box-shadow: 0 0 25px var(--accent-glow); background: #111;
         }
-        h1 { margin: 10px 0 5px; font-size: 30px; letter-spacing: 2px; text-shadow: 0 0 10px var(--accent-color); }
+        h1 { margin: 10px 0 5px; font-size: 28px; letter-spacing: 2px; text-shadow: 0 0 10px var(--accent-color); }
         .role { color: var(--accent-color); font-size: 13px; margin-bottom: 20px; }
         .tabs { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; }
         .tab {
@@ -84,11 +85,11 @@
         <div class="tab" onclick="showPage(3)">تواصل</div>
     </div>
     <div id="content">
-        <div class="page active"> صلاح الدين أبوصالحية من نابلس، فلسطيني، مطور مهتم بالأنظمة والبرمجة والعلوم التقنية <br>
-              Salah Aldin AbuSalehia from Nablus <br> Palestinian <br> A developer interested in systems, programming, and technical sciences</div>
+        <div class="page active">صلاح الدين أبوصالحية من نابلس، فلسطيني، مطور مهتم بالأنظمة والبرمجة والعلوم التقنية <br>
+            Salah Aldin AbuSalehia from Nablus <br> Palestinian <br> A developer interested in systems, programming, and technical sciences</div>
         <div class="page">....HTML, CSS, JS💻<br>Automation⚙️<br>Problem Solving🛠️<br>...Learning</div>
         <div class="page">PC & Console🎮|Best games🕹️<br>(...GTA. CS. COD. BF. GZH. RE. HALF-LIFE. NFS)</div>
-        <div class="page"> سعيد بتواصلك معي عبر حساباتي الرسمية أدناه.<br>It is my pleasure to connect with you through my official accounts provided below  </div>
+        <div class="page"> سعيد بتواصلك معي عبر حساباتي الرسمية أدناه.<br>It is my pleasure to connect with you through my official accounts provided below </div>
     </div>
     <div class="social">
         <a href="https://steamcommunity.com/profiles/76561198432299924/" target="_blank"><i class="fab fa-steam"></i></a>
@@ -112,7 +113,7 @@
 
     const layer = document.getElementById("codeLayer");
     const pool = ["< />", "{ }", "[ ]", "()", "===", "++", "01", "&&", "||", "JS", "PY", "⚡", "🔥", "💻", "🎮"];
-    const totalSymbols = 120; // تقليل العدد لتحسين الأداء
+    const totalSymbols = 110; 
     const allSymbols = [];
 
     for (let i = 0; i < totalSymbols; i++) {
@@ -129,88 +130,101 @@
     }
 
     const st = document.getElementById("stTrigger");
-    let isHeart = false;
+    let isHeartActive = false;
 
-    st.addEventListener("mouseenter", () => {
-        isHeart = true;
-        const cx = window.innerWidth * 0.78; 
-        const cy = window.innerHeight * 0.5;
-        const scale = 17;
+    // تشكيل القلب (للموبايل والـ PC)
+    function toggleHeart(active) {
+        isHeartActive = active;
+        if (active) {
+            // إذا موبايل خليه بالنص، إذا لابتوب خليه على اليمين
+            const isMobile = window.innerWidth < 600;
+            const cx = window.innerWidth * (isMobile ? 0.5 : 0.78); 
+            const cy = window.innerHeight * (isMobile ? 0.75 : 0.5);
+            const scale = isMobile ? 12 : 17;
 
-        allSymbols.forEach((sym, i) => {
-            const t = (i / allSymbols.length) * 2 * Math.PI;
-            const x = 16 * Math.pow(Math.sin(t), 3);
-            const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-            
-            const targetX = cx + x * scale;
-            const targetY = cy + y * scale;
-            const currentX = (parseFloat(sym.style.left) / 100) * window.innerWidth;
-            const currentY = (parseFloat(sym.style.top) / 100) * window.innerHeight;
+            allSymbols.forEach((sym, i) => {
+                const t = (i / allSymbols.length) * 2 * Math.PI;
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                
+                const targetX = cx + x * scale;
+                const targetY = cy + y * scale;
+                const currentX = (parseFloat(sym.style.left) / 100) * window.innerWidth;
+                const currentY = (parseFloat(sym.style.top) / 100) * window.innerHeight;
 
-            sym.style.transform = `translate(${targetX - currentX}px, ${targetY - currentY}px) scale(1.1)`;
-            sym.style.color = "var(--heart-color)";
-            sym.style.opacity = "1";
-            sym.style.textShadow = "0 0 12px var(--heart-color)";
-        });
-    });
+                sym.style.transform = `translate(${targetX - currentX}px, ${targetY - currentY}px) scale(1.1)`;
+                sym.style.color = "var(--heart-color)";
+                sym.style.opacity = "1";
+                sym.style.textShadow = "0 0 12px var(--heart-color)";
+            });
+            st.style.opacity = "1";
+            st.style.color = "#ffcc00";
+        } else {
+            allSymbols.forEach(sym => {
+                sym.style.transform = `translate(0,0) scale(1)`;
+                sym.style.color = "rgba(0, 123, 255, 0.15)";
+                sym.style.opacity = "0.15";
+                sym.style.textShadow = "none";
+            });
+            st.style.opacity = "0.15";
+        }
+    }
 
-    st.addEventListener("mouseleave", () => {
-        isHeart = false;
-        allSymbols.forEach(sym => {
-            sym.style.transform = `translate(0,0) scale(1)`;
-            sym.style.color = "rgba(0, 123, 255, 0.15)";
-            sym.style.opacity = "0.15";
-            sym.style.textShadow = "none";
-        });
-    });
+    // تفاعل ST (ماوس + لمس)
+    st.addEventListener("mouseenter", () => { if(window.innerWidth > 600) toggleHeart(true); });
+    st.addEventListener("mouseleave", () => { if(window.innerWidth > 600) toggleHeart(false); });
+    st.addEventListener("click", () => { if(window.innerWidth <= 600) toggleHeart(!isHeartActive); });
 
     let ticking = false;
-    document.addEventListener("mousemove", (e) => {
+    function handleInteraction(ex, ey) {
         if (!ticking) {
             window.requestAnimationFrame(() => {
-                handleMove(e);
+                // وهج ST
+                const stRect = st.getBoundingClientRect();
+                const distToSt = Math.hypot(ex - (stRect.left + 15), ey - (stRect.top + 15));
+                if (distToSt < 250) {
+                    const p = 1 - (distToSt / 250);
+                    st.style.opacity = Math.max(0.15, p);
+                    if(p > 0.5) {
+                        st.style.color = "#ffcc00";
+                        st.style.textShadow = `0 0 ${15 * p}px #ffcc00`;
+                    }
+                } else if (!isHeartActive) {
+                    st.style.opacity = "0.15";
+                }
+
+                if (isHeartActive) { ticking = false; return; }
+
+                // حركة الرموز
+                allSymbols.forEach(sym => {
+                    const rect = sym.getBoundingClientRect();
+                    const dx = ex - (rect.left + 10);
+                    const dy = ey - (rect.top + 10);
+                    const dist = Math.hypot(dx, dy);
+
+                    if (dist < 180) {
+                        const f = (180 - dist) / sym.dataset.speed;
+                        sym.style.transform = `translate(${dx * f}px, ${dy * f}px)`;
+                        sym.style.opacity = "0.7";
+                        sym.style.color = "var(--accent-glow)";
+                    } else {
+                        sym.style.transform = `translate(0,0)`;
+                        sym.style.opacity = "0.15";
+                        sym.style.color = "rgba(0, 123, 255, 0.15)";
+                    }
+                });
                 ticking = false;
             });
             ticking = true;
         }
-    });
-
-    function handleMove(e) {
-        const { clientX: x, clientY: y } = e;
-
-        // وهج ST
-        const stRect = st.getBoundingClientRect();
-        const distToSt = Math.hypot(x - (stRect.left + 15), y - (stRect.top + 15));
-        if (distToSt < 250) {
-            const p = 1 - (distToSt / 250);
-            st.style.opacity = Math.max(0.15, p);
-            st.style.color = p > 0.5 ? "#ffcc00" : "rgba(0, 123, 255, 0.15)";
-            st.style.textShadow = p > 0.5 ? `0 0 ${15 * p}px #ffcc00` : "none";
-        } else {
-            st.style.opacity = "0.15";
-            st.style.textShadow = "none";
-        }
-
-        if (isHeart) return;
-
-        allSymbols.forEach(sym => {
-            const rect = sym.getBoundingClientRect();
-            const dx = x - (rect.left + 10);
-            const dy = y - (rect.top + 10);
-            const dist = Math.hypot(dx, dy);
-
-            if (dist < 180) {
-                const f = (180 - dist) / sym.dataset.speed;
-                sym.style.transform = `translate(${dx * f}px, ${dy * f}px)`;
-                sym.style.opacity = "0.7";
-                sym.style.color = "var(--accent-glow)";
-            } else {
-                sym.style.transform = `translate(0,0)`;
-                sym.style.opacity = "0.15";
-                sym.style.color = "rgba(0, 123, 255, 0.15)";
-            }
-        });
     }
+
+    document.addEventListener("mousemove", (e) => handleInteraction(e.clientX, e.clientY));
+    document.addEventListener("touchmove", (e) => {
+        const touch = e.touches[0];
+        handleInteraction(touch.clientX, touch.clientY);
+    }, { passive: false });
+
 </script>
 </body>
 </html>

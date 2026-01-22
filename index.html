@@ -11,7 +11,7 @@
             --accent-color: #007bff;
             --accent-glow: #00a2ff;
             --text-color: #ffffff;
-            --card-bg: rgba(15, 15, 15, 0.45); /* زيادة الشفافية */
+            --card-bg: rgba(15, 15, 15, 0.45); 
             --heart-color: #ff3366;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -36,13 +36,12 @@
             transition: all 0.4s ease;
         }
 
-        /* القائمة الرئيسية - بلور قوي وشفافية عالية */
         .container {
             position: relative; z-index: 2; width: 360px;
             background: var(--card-bg); 
             border-radius: 22px; padding: 30px 22px;
             text-align: center; 
-            backdrop-filter: blur(25px); /* زيادة قوة البلور */
+            backdrop-filter: blur(25px); 
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
@@ -52,7 +51,7 @@
         @media (max-width: 600px) {
             .container { 
                 width: 290px; 
-                margin-top: 100px; /* تنزيل القائمة لإعطاء مساحة للقلب بالأعلى */
+                margin-top: 110px; /* ترك مساحة للقلب بالأعلى */
                 background: rgba(10, 10, 10, 0.4); 
                 backdrop-filter: blur(15px);
             }
@@ -156,10 +155,9 @@
         isHeartActive = active;
         if (active) {
             const isMobile = window.innerWidth < 600;
-            // الموبايل: القلب في المنتصف تماماً وبالأعلى (10% من الارتفاع)
+            // الموبايل: بالنص تماماً (0.5) وبالأعلى جداً (0.07 من ارتفاع الشاشة)
             const cx = window.innerWidth * (isMobile ? 0.5 : 0.82); 
-            const cy = window.innerHeight * (isMobile ? 0.10 : 0.5); 
-            // تصغير القلب للموبايل (قيمة 4) وللكمبيوتر (قيمة 18)
+            const cy = window.innerHeight * (isMobile ? 0.07 : 0.5); 
             const scale = isMobile ? 4.5 : 18;
 
             allSymbols.forEach((sym, i) => {
